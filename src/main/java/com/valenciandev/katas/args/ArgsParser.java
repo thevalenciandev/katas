@@ -24,7 +24,8 @@ public class ArgsParser {
             String argName = removeDashFrom(programArgs[i++]);
             if (schema.get(argName).argType == BOOLEAN) {
                 values.put(argName, true);
-                continue;
+            } else {
+                values.put(argName, programArgs[i++]);
             }
         }
     }
@@ -33,16 +34,24 @@ public class ArgsParser {
         return programArg.charAt(0) == '-' ? programArg.substring(1) : programArg;
     }
 
-    public boolean valueFor(String argName) {
+    public boolean booleanValueFor(String argName) {
+        return (boolean) valueFor(argName, BOOLEAN);
+    }
+
+    public String stringValueFor(String argName) {
+        return (String) valueFor(argName, Arg.ArgType.STRING);
+    }
+
+    private Object valueFor(String argName, Arg.ArgType argType) {
         Object value = values.get(argName);
         if (value == null) {
             if (schema.containsKey(argName)) {
-                return false;
+                return argType.defaultValue();
             } else {
                 throw new IllegalArgumentException("Arg " + argName + " not expected.");
             }
         }
-        return true;
+        return value;
     }
 
 }

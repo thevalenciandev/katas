@@ -3,6 +3,7 @@ package com.valenciandev.katas.args;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -16,7 +17,7 @@ class ArgsParserTest {
         String[] programArgs = {"-l"};
         argsParser.loadProgramArgs(programArgs);
 
-        assertThat(argsParser.valueFor("l"), is(true));
+        assertThat(argsParser.booleanValueFor("l"), is(true));
     }
 
     @Test
@@ -26,7 +27,7 @@ class ArgsParserTest {
 
         argsParser.loadProgramArgs(new String[0]);
 
-        assertThat(argsParser.valueFor("l"), is(false));
+        assertThat(argsParser.booleanValueFor("l"), is(false));
     }
 
     @Test
@@ -36,7 +37,38 @@ class ArgsParserTest {
 
         argsParser.loadProgramArgs(new String[0]);
 
-        assertThrows(IllegalArgumentException.class, () -> argsParser.valueFor("UNKNOWN"));
+        assertThrows(IllegalArgumentException.class, () -> argsParser.booleanValueFor("UNKNOWN"));
+    }
+
+    @Test
+    void parsesStringValues() {
+        Arg[] argsSchema = new Arg[]{Arg.ofStringType("d")};
+        ArgsParser argsParser = new ArgsParser(argsSchema);
+
+        String[] programArgs = {"-d", "/usr/logs"};
+        argsParser.loadProgramArgs(programArgs);
+
+        assertThat(argsParser.stringValueFor("d"), is("/usr/logs"));
+    }
+
+    @Test
+    void defaultsStringValuesToEmptyString() {
+        Arg[] argsSchema = new Arg[]{Arg.ofStringType("d")};
+        ArgsParser argsParser = new ArgsParser(argsSchema);
+
+        argsParser.loadProgramArgs(new String[0]);
+
+        assertThat(argsParser.stringValueFor("d"), is(emptyString()));
+    }
+
+    @Test
+    void blowsUpIfStringArgIsUnknown() {
+        Arg[] argsSchema = new Arg[]{Arg.ofStringType("d")};
+        ArgsParser argsParser = new ArgsParser(argsSchema);
+
+        argsParser.loadProgramArgs(new String[0]);
+
+        assertThrows(IllegalArgumentException.class, () -> argsParser.stringValueFor("UNKNOWN"));
     }
 
 }

@@ -11,11 +11,25 @@ public class Arg {
     }
 
     public enum ArgType {
-        BOOLEAN
+        BOOLEAN(false), STRING("");
+
+        private final Object defaultValue;
+
+        ArgType(Object defaultValue) {
+            this.defaultValue = defaultValue;
+        }
+
+        public Object defaultValue() {
+            return defaultValue;
+        }
     }
 
     public static Arg ofBooleanType(String argName) {
         return new Arg(argName, ArgType.BOOLEAN);
+    }
+
+    public static Arg ofStringType(String argName) {
+        return new Arg(argName, ArgType.STRING);
     }
 
 }

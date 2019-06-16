@@ -34,7 +34,15 @@ public class ArgsParser {
     }
 
     public boolean valueFor(String argName) {
-        return (boolean) values.get(argName);
+        Object value = values.get(argName);
+        if (value == null) {
+            if (schema.containsKey(argName)) {
+                return false;
+            } else {
+                throw new IllegalArgumentException("Arg " + argName + " not expected.");
+            }
+        }
+        return true;
     }
 
 }

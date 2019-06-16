@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import static com.valenciandev.katas.args.Arg.ArgType.BOOLEAN;
+import static com.valenciandev.katas.args.Arg.ArgType.STRING;
 import static java.util.stream.Collectors.toMap;
 
 public class ArgsParser {
@@ -22,12 +23,18 @@ public class ArgsParser {
         while (i < programArgs.length) {
 
             String argName = removeDashFrom(programArgs[i++]);
-            if (schema.get(argName).argType == BOOLEAN) {
+            Arg.ArgType argType = schema.get(argName).argType;
+            if (argType == BOOLEAN) {
                 values.put(argName, true);
             } else {
-                values.put(argName, programArgs[i++]);
+                values.put(argName, valueOrBlowUp(programArgs[i++], argType));
             }
         }
+    }
+
+    private Object valueOrBlowUp(String argValue, Arg.ArgType argType) {
+        argType.validate(argValue);
+        return argValue;
     }
 
     private String removeDashFrom(String programArg) {
@@ -39,7 +46,7 @@ public class ArgsParser {
     }
 
     public String stringValueFor(String argName) {
-        return (String) valueFor(argName, Arg.ArgType.STRING);
+        return (String) valueFor(argName, STRING);
     }
 
     private Object valueFor(String argName, Arg.ArgType argType) {

@@ -1,5 +1,7 @@
 package com.valenciandev.katas.args;
 
+import java.util.regex.Pattern;
+
 public class Arg {
 
     public final String argName;
@@ -11,6 +13,7 @@ public class Arg {
     }
 
     public enum ArgType {
+
         BOOLEAN(false), STRING("");
 
         private final Object defaultValue;
@@ -21,6 +24,22 @@ public class Arg {
 
         public Object defaultValue() {
             return defaultValue;
+        }
+
+        public void validate(Object argValue) {
+            switch (this) {
+                case STRING:
+                    if (isANumber(argValue)) {
+                        throw new IllegalArgumentException("String expected. Was a number => " + argValue);
+                    }
+                    break;
+                default:
+                    throw new IllegalArgumentException("ArgType " + this + " not supported yet.");
+            }
+        }
+
+        private boolean isANumber(Object argValue) {
+            return Pattern.matches("\\d+", String.valueOf(argValue));
         }
     }
 

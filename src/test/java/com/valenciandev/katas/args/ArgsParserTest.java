@@ -71,4 +71,14 @@ class ArgsParserTest {
         assertThrows(IllegalArgumentException.class, () -> argsParser.stringValueFor("UNKNOWN"));
     }
 
+    @Test
+    void blowsUpIfStringArgIsNotAString() {
+        Arg[] argsSchema = new Arg[]{Arg.ofStringType("d")};
+        ArgsParser argsParser = new ArgsParser(argsSchema);
+
+        String[] programArgs = {"-d", "8080"};
+
+        assertThrows(IllegalArgumentException.class, () -> argsParser.loadProgramArgs(programArgs));
+    }
+
 }

@@ -12,12 +12,13 @@ public class ArgsParser {
     private final Map<String, Arg> schema;
     private final Map<String, Object> values;
 
-    public ArgsParser(Arg[] argsSchema) {
+    public ArgsParser(Arg[] argsSchema, String[] programArgs) {
         schema = Stream.of(argsSchema).collect(toMap(arg -> arg.argName, arg -> arg));
         values = new HashMap<>(argsSchema.length);
+        loadProgramArgs(programArgs);
     }
 
-    public void loadProgramArgs(String[] programArgs) {
+    private void loadProgramArgs(String[] programArgs) {
 
         int i = 0;
         while (i < programArgs.length) {

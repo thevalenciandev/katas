@@ -12,10 +12,8 @@ class ArgsParserTest {
     @Test
     void parsesBooleanValues() {
         Arg[] argsSchema = new Arg[]{Arg.ofBooleanType("l")};
-        ArgsParser argsParser = new ArgsParser(argsSchema);
-
         String[] programArgs = {"-l"};
-        argsParser.loadProgramArgs(programArgs);
+        ArgsParser argsParser = new ArgsParser(argsSchema, programArgs);
 
         assertThat(argsParser.booleanValueFor("l"), is(true));
     }
@@ -23,9 +21,7 @@ class ArgsParserTest {
     @Test
     void defaultsBooleanValuesToFalse() {
         Arg[] argsSchema = new Arg[]{Arg.ofBooleanType("l")};
-        ArgsParser argsParser = new ArgsParser(argsSchema);
-
-        argsParser.loadProgramArgs(new String[0]);
+        ArgsParser argsParser = new ArgsParser(argsSchema, new String[0]);
 
         assertThat(argsParser.booleanValueFor("l"), is(false));
     }
@@ -33,9 +29,7 @@ class ArgsParserTest {
     @Test
     void blowsUpIfBooleanArgIsUnknown() {
         Arg[] argsSchema = new Arg[]{Arg.ofBooleanType("l")};
-        ArgsParser argsParser = new ArgsParser(argsSchema);
-
-        argsParser.loadProgramArgs(new String[0]);
+        ArgsParser argsParser = new ArgsParser(argsSchema, new String[0]);
 
         assertThrows(IllegalArgumentException.class, () -> argsParser.booleanValueFor("UNKNOWN"));
     }
@@ -43,10 +37,8 @@ class ArgsParserTest {
     @Test
     void parsesStringValues() {
         Arg[] argsSchema = new Arg[]{Arg.ofStringType("d")};
-        ArgsParser argsParser = new ArgsParser(argsSchema);
-
         String[] programArgs = {"-d", "/usr/logs"};
-        argsParser.loadProgramArgs(programArgs);
+        ArgsParser argsParser = new ArgsParser(argsSchema, programArgs);
 
         assertThat(argsParser.stringValueFor("d"), is("/usr/logs"));
     }
@@ -54,9 +46,7 @@ class ArgsParserTest {
     @Test
     void defaultsStringValuesToEmptyString() {
         Arg[] argsSchema = new Arg[]{Arg.ofStringType("d")};
-        ArgsParser argsParser = new ArgsParser(argsSchema);
-
-        argsParser.loadProgramArgs(new String[0]);
+        ArgsParser argsParser = new ArgsParser(argsSchema, new String[0]);
 
         assertThat(argsParser.stringValueFor("d"), is(emptyString()));
     }
@@ -64,9 +54,7 @@ class ArgsParserTest {
     @Test
     void blowsUpIfStringArgIsUnknown() {
         Arg[] argsSchema = new Arg[]{Arg.ofStringType("d")};
-        ArgsParser argsParser = new ArgsParser(argsSchema);
-
-        argsParser.loadProgramArgs(new String[0]);
+        ArgsParser argsParser = new ArgsParser(argsSchema, new String[0]);
 
         assertThrows(IllegalArgumentException.class, () -> argsParser.stringValueFor("UNKNOWN"));
     }
@@ -74,11 +62,9 @@ class ArgsParserTest {
     @Test
     void blowsUpIfStringArgIsNotAString() {
         Arg[] argsSchema = new Arg[]{Arg.ofStringType("d")};
-        ArgsParser argsParser = new ArgsParser(argsSchema);
-
         String[] programArgs = {"-d", "8080"};
 
-        assertThrows(IllegalArgumentException.class, () -> argsParser.loadProgramArgs(programArgs));
+        assertThrows(IllegalArgumentException.class, () -> new ArgsParser(argsSchema, programArgs));
     }
 
 }

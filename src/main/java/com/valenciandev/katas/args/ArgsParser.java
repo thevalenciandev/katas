@@ -1,5 +1,7 @@
 package com.valenciandev.katas.args;
 
+import com.valenciandev.katas.args.Arg.ArgType;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -23,18 +25,18 @@ public class ArgsParser {
         while (i < programArgs.length) {
 
             String argName = removeDashFrom(programArgs[i++]);
-            Arg.ArgType argType = schema.get(argName).argType;
+            ArgType argType = schema.get(argName).argType;
             if (argType == BOOLEAN) {
                 values.put(argName, true);
             } else if (argType == INT) {
-                values.put(argName, Integer.parseInt((String) valueOrBlowUp(programArgs[i++], argType)));
+                values.put(argName, argType.toProperType(programArgs[i++]));
             } else {
                 values.put(argName, valueOrBlowUp(programArgs[i++], argType));
             }
         }
     }
 
-    private Object valueOrBlowUp(String argValue, Arg.ArgType argType) {
+    private Object valueOrBlowUp(String argValue, ArgType argType) {
         argType.validate(argValue);
         return argValue;
     }
@@ -55,7 +57,7 @@ public class ArgsParser {
         return (int) valueFor(argName, INT);
     }
 
-    private Object valueFor(String argName, Arg.ArgType argType) {
+    private Object valueFor(String argName, ArgType argType) {
         Object value = values.get(argName);
         if (value == null) {
             if (schema.containsKey(argName)) {

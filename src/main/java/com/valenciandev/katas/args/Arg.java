@@ -46,6 +46,19 @@ public class Arg {
         private boolean isANumber(Object argValue) {
             return Pattern.matches("\\d+", String.valueOf(argValue));
         }
+
+        public Object toProperType(String programArg) {
+            switch (this) {
+                case INT:
+                    if (!isANumber(programArg)) {
+                        throw new IllegalArgumentException("Int expected. Was something else => " + programArg);
+                    }
+                    return Integer.parseInt(programArg);
+                default:
+                    throw new IllegalArgumentException("ArgType " + this + " not supported yet.");
+            }
+        }
+
     }
 
     public static Arg ofBooleanType(String argName) {

@@ -4,8 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static com.valenciandev.katas.args.Arg.ArgType.BOOLEAN;
-import static com.valenciandev.katas.args.Arg.ArgType.STRING;
+import static com.valenciandev.katas.args.Arg.ArgType.*;
 import static java.util.stream.Collectors.toMap;
 
 public class ArgsParser {
@@ -27,6 +26,8 @@ public class ArgsParser {
             Arg.ArgType argType = schema.get(argName).argType;
             if (argType == BOOLEAN) {
                 values.put(argName, true);
+            } else if (argType == INT) {
+                values.put(argName, Integer.parseInt((String) valueOrBlowUp(programArgs[i++], argType)));
             } else {
                 values.put(argName, valueOrBlowUp(programArgs[i++], argType));
             }
@@ -48,6 +49,10 @@ public class ArgsParser {
 
     public String stringValueFor(String argName) {
         return (String) valueFor(argName, STRING);
+    }
+
+    public int intValueFor(String argName) {
+        return (int) valueFor(argName, INT);
     }
 
     private Object valueFor(String argName, Arg.ArgType argType) {

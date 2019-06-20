@@ -14,7 +14,7 @@ public class Arg {
 
     public enum ArgType {
 
-        BOOLEAN(false), STRING("");
+        BOOLEAN(false), STRING(""), INT(0);
 
         private final Object defaultValue;
 
@@ -31,6 +31,11 @@ public class Arg {
                 case STRING:
                     if (isANumber(argValue)) {
                         throw new IllegalArgumentException("String expected. Was a number => " + argValue);
+                    }
+                    break;
+                case INT:
+                    if (!isANumber(argValue)) {
+                        throw new IllegalArgumentException("Int expected. Was something else => " + argValue);
                     }
                     break;
                 default:
@@ -50,5 +55,10 @@ public class Arg {
     public static Arg ofStringType(String argName) {
         return new Arg(argName, ArgType.STRING);
     }
+
+    public static Arg ofIntType(String argName) {
+        return new Arg(argName, ArgType.INT);
+    }
+
 
 }

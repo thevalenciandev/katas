@@ -67,4 +67,37 @@ class ArgsParserTest {
         assertThrows(IllegalArgumentException.class, () -> new ArgsParser(argsSchema, programArgs));
     }
 
+    @Test
+    void parsesIntegerValues() {
+        Arg[] argsSchema = new Arg[]{Arg.ofIntType("p")};
+        String[] programArgs = {"-p", "8080"};
+        ArgsParser argsParser = new ArgsParser(argsSchema, programArgs);
+
+        assertThat(argsParser.intValueFor("p"), is(8080));
+    }
+
+    @Test
+    void defaultsIntValuesToZero() {
+        Arg[] argsSchema = new Arg[]{Arg.ofIntType("p")};
+        ArgsParser argsParser = new ArgsParser(argsSchema, new String[0]);
+
+        assertThat(argsParser.intValueFor("p"), is(0));
+    }
+
+    @Test
+    void blowsUpIfIntArgIsUnknown() {
+        Arg[] argsSchema = new Arg[]{Arg.ofIntType("p")};
+        ArgsParser argsParser = new ArgsParser(argsSchema, new String[0]);
+
+        assertThrows(IllegalArgumentException.class, () -> argsParser.intValueFor("UNKNOWN"));
+    }
+
+    @Test
+    void blowsUpIfIntArgIsNotAnInt() {
+        Arg[] argsSchema = new Arg[]{Arg.ofIntType("p")};
+        String[] programArgs = {"-p", "NOT_AN_INT"};
+
+        assertThrows(IllegalArgumentException.class, () -> new ArgsParser(argsSchema, programArgs));
+    }
+
 }

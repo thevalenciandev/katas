@@ -28,17 +28,10 @@ public class ArgsParser {
             ArgType argType = schema.get(argName).argType;
             if (argType == BOOLEAN) {
                 values.put(argName, true);
-            } else if (argType == INT) {
-                values.put(argName, argType.toProperType(programArgs[i++]));
             } else {
-                values.put(argName, valueOrBlowUp(programArgs[i++], argType));
+                values.put(argName, argType.toProperType(programArgs[i++]));
             }
         }
-    }
-
-    private Object valueOrBlowUp(String argValue, ArgType argType) {
-        argType.validate(argValue);
-        return argValue;
     }
 
     private String removeDashFrom(String programArg) {

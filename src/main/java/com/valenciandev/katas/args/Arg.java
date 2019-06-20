@@ -26,29 +26,17 @@ public class Arg {
             return defaultValue;
         }
 
-        public void validate(Object argValue) {
-            switch (this) {
-                case STRING:
-                    if (isANumber(argValue)) {
-                        throw new IllegalArgumentException("String expected. Was a number => " + argValue);
-                    }
-                    break;
-                case INT:
-                    if (!isANumber(argValue)) {
-                        throw new IllegalArgumentException("Int expected. Was something else => " + argValue);
-                    }
-                    break;
-                default:
-                    throw new IllegalArgumentException("ArgType " + this + " not supported yet.");
-            }
-        }
-
         private boolean isANumber(Object argValue) {
             return Pattern.matches("\\d+", String.valueOf(argValue));
         }
 
         public Object toProperType(String programArg) {
             switch (this) {
+                case STRING:
+                    if (isANumber(programArg)) {
+                        throw new IllegalArgumentException("String expected. Was a number => " + programArg);
+                    }
+                    return programArg;
                 case INT:
                     if (!isANumber(programArg)) {
                         throw new IllegalArgumentException("Int expected. Was something else => " + programArg);
